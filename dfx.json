@@ -7,8 +7,8 @@
     },
     "icrc1_ledger": {
       "type": "custom",
-      "candid": "src/lift/icrc1_ledger.did",
-      "wasm": "src/lift/icrc1_ledger.wasm.gz"
+      "candid": "src/sixth_backend/lift/icrc1_ledger.did",
+      "wasm": "src/sixth_backend/lift/icrc1_ledger.wasm.gz"
     }
   },
   "defaults": {
