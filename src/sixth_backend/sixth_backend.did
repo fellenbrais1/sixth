@@ -4,4 +4,7 @@ service : {
     "set_fee": (nat64) -> (nat64);
     "show_transfer_amount": () -> (nat64) query;
     "show_transfer_fee": () -> (nat64) query;
+    "experimental": (SendInfo: record{ proton_account: text; ic_principal: principal; amount: nat64; utc_time: nat64 }) -> (nat64) query; 
+    "print_json": (JsonRecord: record{ proton_account: text; ic_principal_id: principal; amount: nat64; date_time: nat64}) -> (text) query;
+    "greet_other_canister": (principal, principal) -> (text);
 }

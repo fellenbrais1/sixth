@@ -125,8 +125,8 @@ thread_local! {
 }
 
 // JESPER - Not sure if needed?
-#[update]
-async fn greet_other_canister(ledger_canister_id: Principal, to_principal: Principal) -> String {
+#[ic_cdk::update]
+pub async fn greet_other_canister(ledger_canister_id: Principal, to_principal: Principal) -> String {
     let args = GreetingParams { to_principal };
     
     match call_raw(
@@ -151,7 +151,7 @@ async fn greet_other_canister(ledger_canister_id: Principal, to_principal: Princ
 // Later we could potentially use this to iterate over a range of Principals and change the to address each time
 // Can be called by the user
 #[ic_cdk::update]
-pub fn set_to_principal(set_principal : Principal) -> Principal {
+pub async fn set_to_principal(set_principal : Principal) -> Principal {
     let to_principal = set_principal;
     print!("To Principal set to {}", Principal::to_text(&to_principal));
     return to_principal;
@@ -212,7 +212,7 @@ fn main() {
     
     let json_record_keys = ["proton_account", "ic_principal", "amount", "date_time"];
     
-    let mut current_send_object: SendInfo = SendInfo {
+    let current_send_object: SendInfo = SendInfo {
         proton_account: String::from(""),
         ic_principal: to_principal,
         amount: 0,
@@ -226,35 +226,41 @@ fn main() {
     }
     
     #[ic_cdk::query]
-    pub fn experimental(current_send_object: SendInfo) -> u64 {
+    pub async fn experimental(current_send_object: SendInfo) -> u64 {
         let object_to_print = get_my_struct(current_send_object);
         object_to_print.amount
     }
 
-    #[ic_cdk::query]
-    pub fn print_json(json_array: [JsonRecord; 2]) -> () {
-        for item in json_array {
-            crate::println!("{:#?}", item);
-        };
-    }
-
-    // #[ic_cdk::update]
-    // pub fn set_transfer_amount(amount: u64, current_send_object: SendInfo) -> u64 {
-    //     current_send_object.amount = amount;
-    //     return current_send_object.amount;
+    // #[ic_cdk::query]
+    // pub fn print_json(json_array: [JsonRecord; 2]) -> (String) {
+    //     for item in json_array {
+    //         crate::println!("{:#?}", item);
+    //     };
     // }
 
     // #[ic_cdk::query]
-    // pub fn show_transfer_amount(amount: u64) -> u64 {
-    //     let t_amount = transfer_amount;
-    //     return t_amount;
+    // pub async fn do_something() -> String {
+    //     let printer: String = print_json(json_array);
+    //     return printer
     // }
 
-    // // Changes the fee exacted on a transaction (default is 0).
-    // // Can be called by the user
+    #[ic_cdk::update]
+    pub async fn set_transfer_amount(amount: u64, mut current_send_object: SendInfo) -> u64 {
+        current_send_object.amount = amount;
+        return current_send_object.amount;
+    }
+
+    #[ic_cdk::query]
+    pub async fn show_transfer_amount(current_send_object: SendInfo) -> u64 {
+        let t_amount = current_send_object.amount;
+        return t_amount;
+    }
+
+    // Changes the fee exacted on a transaction (default is 0).
+    // Can be called by the user
     // #[ic_cdk::update]
-    // fn set_fee(set_amount: u64) -> u64 {
-    //     let transfer_fee: u64 = set_amount;
+    // fn set_fee(set_amount: u64, mut current_send_object: SendInfo) -> u64 {
+    //     current_send_object.fee: u64 = set_amount;
     //     return transfer_fee;
     // }
             
@@ -270,3 +276,4 @@ fn greet(name: String) -> String {
     format!("Hello, {}!", name)
 }
 
+ic_cdk::export_candid!();
