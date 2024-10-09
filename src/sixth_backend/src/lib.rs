@@ -5,18 +5,12 @@
 
 //IMPORTS ************************************************************
 
-// use api::management_canister::bitcoin::GetCurrentFeePercentilesRequest;
 use candid::{CandidType, Nat, Principal};
 use serde::Deserialize;
 use blob::Blob;
 use std::cell::RefCell;
-// use std::f32::MIN;
-// use std::mem::transmute;
-// use std::str::FromStr;
 use ic_cdk::*;
 use ic_cdk::api::call::call_raw;
-// use std::convert::TryInto;
-// use ic_cdk::storage;
 
 // TYPES *************************************************************
 
